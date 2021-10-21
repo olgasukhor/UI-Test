@@ -12,6 +12,7 @@ import headCells from './headCells';
 import Context from './context';
 
 
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -26,30 +27,31 @@ const style = {
 
 function ModalBtn() {
 
-    const [columns, setColumns] = useState([])
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [checked, setChecked] = useState(false);
-    const { headChecked, checkedColumnsNew } = useContext(Context)
+    const { setHeadCheck, headCheck, checkedColumnsBtn } = useContext(Context)
 
 
     const onChange = (item, id) => {
         if (item.id === id) {
             setChecked(item.checked = !item.checked)
         }
-        if (item.checked) {
-            setColumns([
-                ...columns, id]
-            )
-        }
-        return columns;
     };
 
+    const headCheckedBtn = () => {
+        setHeadCheck(headCells.filter(item => item.checked))
+    }
+
+    useEffect(() => {
+        localStorage.setItem('columns', JSON.stringify(headCheck))
+    }, [headCheck])
+    console.log(headCheck)
+
     const handleClick = () => {
-        localStorage.setItem('columns', JSON.stringify(columns))
-        headChecked()
-        checkedColumnsNew()
+        headCheckedBtn();
+        checkedColumnsBtn();
         handleClose()
     }
 

@@ -12,12 +12,13 @@ function App() {
 
   const [profiles, setProfiles] = useState([])
   const [headCheck, setHeadCheck] = useState(headCells)
-  const [row, setRow] = useState([]);
+  const [newProfiles, setNewProfiles] = useState([])
 
   useEffect(() => {
     const getProfiles = async () => {
       let profilesFromServer = await fetchProfiles()
       setProfiles(profilesFromServer)
+      setNewProfiles(profilesFromServer)
     }
     getProfiles()
   }, [])
@@ -34,37 +35,19 @@ function App() {
     return (data)
   }
 
-
-  // const RowfromLS = () => {
-  // const rowLS = localStorage.getItem('columns' || [])
-  // setRow(JSON.parse(rowLS))
-  // }
   useEffect(() => {
-    const row = localStorage.getItem('columns' || [])
-    setRow(JSON.parse(row))
+    const rowFromLocalStorage = localStorage.getItem('columns' || [])
+    setHeadCheck(JSON.parse(rowFromLocalStorage))
   }, [])
 
-  let checkedHeadCell = []
-  const headChecked = () => {
-    for (let i = 0; i < headCells.length; i++) {
-      for (let k = 0; k < row.length; k++) {
-        if (headCells[i].id === row[k]) {
-          checkedHeadCell.push(headCells[i])
-        }
-      }
-    }
-    checkedHeadCell = Array.from(new Set(checkedHeadCell));
-    setHeadCheck(checkedHeadCell)
-  }
 
-  let profilesNew = [];
-  function checkedColumnsNew() {
-
-    let element = [];
-    for (let i = 0; i < row.length; i++) {
-      element.push(row[i])
+  const checkedColumnsBtn = () => {
+    let profilesNewBtn = [];
+    let elementC = [];
+    for (let i = 0; i < headCheck.length; i++) {
+      elementC.push(headCheck[i].id)
     }
-    let checkedColumns = element.join(', ');
+    let checkedColumns = elementC.join(', ');
 
     for (let i = 0; i < profiles.length; i++) {
       const element = profiles[i];
@@ -73,15 +56,14 @@ function App() {
         keys.map(key => [key, element[key]])
       );
       console.log(sortedObj)
-      profilesNew.push(sortedObj)
+      profilesNewBtn.push(sortedObj)
     }
-    setProfiles(profilesNew)
+    return setNewProfiles(profilesNewBtn)
   }
-  console.log(profilesNew)
-  console.log(profiles)
+
 
   return (
-    <Context.Provider value={{ profiles, setProfiles, fetchProfile, headCheck, setHeadCheck, row, setRow, headChecked, checkedColumnsNew }}>
+    <Context.Provider value={{ profiles, setProfiles, fetchProfile, headCheck, setHeadCheck, checkedColumnsBtn, newProfiles }}>
       <BrowserRouter>
         <div className="App">
           <NavTabs />
